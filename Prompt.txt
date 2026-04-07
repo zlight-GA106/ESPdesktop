@@ -1,0 +1,1871 @@
+📁 project/
+├── 📄 project.ino
+├── 📄 config.h
+├── 📄 app_data.h
+│
+└── 📁 src/
+    ├── 📁 sensors/
+    │   ├── 📄 temp_humi.h
+    │   ├── 📄 temp_humi.cpp
+    │   ├── 📄 light_sensor.h
+    │   ├── 📄 light_sensor.cpp
+    │   ├── 📄 radar_sensor.h
+    │   ├── 📄 radar_sensor.cpp
+    │   ├── 📄 microphone.h
+    │   └── 📄 microphone.cpp
+    │
+    ├── 📁 audio/
+    │   ├── 📄 speaker.h
+    │   ├── 📄 speaker.cpp
+    │   ├── 📄 audio_player.h
+    │   └── 📄 audio_player.cpp
+    │
+    ├── 📁 ui/
+    │   ├── 📄 display_driver.h
+    │   ├── 📄 display_driver.cpp
+    │   ├── 📄 ui_theme_pocketpc.h
+    │   ├── 📄 ui_theme_pocketpc.cpp
+    │   ├── 📄 ui_frame.h
+    │   ├── 📄 ui_frame.cpp
+    │   ├── 📄 ui_keypad.h
+    │   ├── 📄 ui_keypad.cpp
+    │   ├── 📄 ui_manager.h
+    │   ├── 📄 ui_manager.cpp
+    │   ├── 📄 ui_home_page.h
+    │   ├── 📄 ui_home_page.cpp
+    │   ├── 📄 ui_menu_page.h
+    │   ├── 📄 ui_menu_page.cpp
+    │   ├── 📄 ui_sensor_page.h
+    │   ├── 📄 ui_sensor_page.cpp
+    │   ├── 📄 ui_settings_menu_page.h
+    │   ├── 📄 ui_settings_menu_page.cpp
+    │   ├── 📄 ui_wifi_info_page.h
+    │   ├── 📄 ui_wifi_info_page.cpp
+    │   ├── 📄 ui_bluetooth_info_page.h
+    │   ├── 📄 ui_bluetooth_info_page.cpp
+    │   ├── 📄 ui_mqtt_info_page.h
+    │   ├── 📄 ui_mqtt_info_page.cpp
+    │   ├── 📄 ui_brightness_page.h
+    │   ├── 📄 ui_brightness_page.cpp
+    │   ├── 📄 ui_volume_page.h
+    │   ├── 📄 ui_volume_page.cpp
+    │   ├── 📄 ui_radio_page.h
+    │   ├── 📄 ui_radio_page.cpp
+    │   ├── 📄 ui_ai_page.h
+    │   ├── 📄 ui_ai_page.cpp
+    │   ├── 📄 ui_about_page.h
+    │   ├── 📄 ui_about_page.cpp
+    │   ├── 📄 ui_dino_page.h
+    │   └── 📄 ui_dino_page.cpp
+    │
+    ├── 📁 net/
+    │   ├── 📄 wifi_manager.h
+    │   ├── 📄 wifi_manager.cpp
+    │   ├── 📄 web_server.h
+    │   └── 📄 web_server.cpp
+    │
+    ├── 📁 mqtt/
+    │   ├── 📄 mqtt_client.h
+    │   └── 📄 mqtt_client.cpp
+    │
+    ├── 📁 ai/
+    │   ├── 📄 ai_client.h
+    │   └── 📄 ai_client.cpp
+    │
+    └── 📁 storage/
+        ├── 📄 settings.h
+        └── 📄 settings.cpp
+
+下面是prompt：
+1.project/config.h
+请只生成文件：project/config.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义整个项目的全局宏、硬件引脚、阈值、设备常量和硬件说明
+- 这个文件只放配置，不放业务逻辑
+
+背景：
+- 主控：ESP32-S3 N16R8
+- 开发环境：Arduino IDE
+- UI：LVGL
+- 主调度：millis()
+- 风格：Pocket PC 2000
+- 输入：五向摇杆
+- 音频：click.wav、电台、TTS、About短旋律
+
+要求你在 project/config.h 中完成以下内容：
+
+【1】文件顶部写完整的硬件说明注释，格式清晰，至少包括：
+- TFT 屏幕型号：<st7735S 128*160 SCL:12 SDA:11 RST:10 DC:9 CS:14 BLK:13>
+- 分辨率：<128*160px>
+- 温湿度传感器型号：<SHT40 SCL8 SDA18>
+- 光照传感器型号/类型：<BH1750 SCL8 SDA18>
+- 雷达型号/类型：<LD2402 RX1 TX2>
+- 麦克风类型：<INMP441 WS15 SCK16 SD17 LR7>
+- 音频输出方案：<MAX98357A BCLK4 LRC5 DOUT6>
+- RGB 灯类型：<WS2812 48>
+- 开关量摇杆：<COM-GND UP38 DWN37 LET36 RHT35 MID47>
+
+【2】定义屏幕参数：
+- TFT_WIDTH 128px 
+- TFT_HEIGHT 160px
+
+【3】定义 SPI 相关引脚：
+- TFT_SCLK 
+- TFT_MOSI
+- TFT_MISO（如果不用也可保留占位）
+- TFT_CS
+- TFT_DC
+- TFT_RST
+- TFT_BL（如果背光独立控制）
+
+【4】定义 I2C 引脚：
+- I2C_SDA
+- I2C_SCL
+
+【5】定义温湿度传感器相关宏（如果后续走 I2C，可只保留说明）
+- TEMP_HUMI_ADDR 或占位注释
+
+【6】定义光照传感器相关宏
+- 如果是 I2C 方案，保留地址占位
+- 如果是 ADC 方案，保留 LIGHT_ADC_PIN
+
+【7】定义雷达引脚
+- RADAR_PIN
+- 如果将来需要串口型雷达，可加 TODO 注释说明
+
+【8】定义麦克风引脚
+- MIC_ADC_PIN
+- 如果后续可能是 I2S 麦，可加 TODO 注释说明
+
+【9】定义音频相关引脚
+- SPEAKER_PIN（蜂鸣器/简单提示音）
+- I2S_BCLK
+- I2S_LRCLK
+- I2S_DOUT
+
+【10】定义 RGB 灯引脚
+- RGB_R_PIN
+- RGB_G_PIN
+- RGB_B_PIN
+- 如果是 WS2812，保留 TODO 注释说明
+
+【11】定义五向摇杆引脚
+- KEY_UP_PIN
+- KEY_DOWN_PIN
+- KEY_LEFT_PIN
+- KEY_RIGHT_PIN
+- KEY_OK_PIN
+
+【12】定义阈值
+- TEMP_HIGH_THRESHOLD
+- LIGHT_LOW_THRESHOLD
+- SOUND_HIGH_THRESHOLD
+
+【13】定义 UI 常量
+- UI_ANIM_TIME
+- UI_STATUS_REFRESH_INTERVAL（可选）
+- UI_DEFAULT_BRIGHTNESS
+- UI_DEFAULT_VOLUME
+
+【14】命名清晰、全部中文注释
+
+【15】不要放任何函数实现，不要放业务逻辑
+
+
+2.project/config.h
+输出要求：
+1. 先简要说明这个文件作用
+2. 再输出完整的 project/config.h 代码
+3. 最后补充：
+   - 依赖哪些文件：通常无
+   - 下一步最适合生成哪个文件
+   - 当前容易踩的坑
+
+请只生成文件：project/app_data.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义全项目通用的全局数据结构
+- 让传感器、UI、网络、MQTT、AI、音频都能共享状态
+
+要求：
+
+【1】定义 struct SensorData
+字段至少包含：
+- float temperature
+- float humidity
+- float light
+- bool motionDetected
+- int soundLevel
+
+【2】定义 struct SystemState
+字段至少包含：
+- bool wifiConnected
+- bool mqttConnected
+- bool aiBusy
+- bool audioPlaying
+- bool tooDark
+- bool tooNoisy
+- bool tempAlarm
+- int currentPageId
+- int brightness
+- int volume
+
+【3】可以根据项目特性补充适度字段，但不要过度复杂，例如：
+- bool bluetoothEnabled
+- bool radioPlaying
+- bool ttsPlaying
+- bool aboutMelodyPlaying
+这些字段只有在确实有用时再加，保持简单清楚
+
+【4】为结构体字段提供默认值初始化方式
+- 可以用构造函数
+- 也可以用统一默认值初始化
+- 但必须适合 Arduino IDE 和初学者理解
+
+【5】中文注释详细说明每个字段的用途
+
+【6】不要放业务函数实现
+
+输出要求：
+1. 先说明这个文件的职责
+2. 输出完整的 project/app_data.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+3.project/src/storage/settings.h
+请只生成文件：project/src/storage/settings.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 为本地配置保存模块定义头文件
+- 必须支持多个网络电台源
+- 不能只保存单个 radioUrl
+
+要求：
+
+【1】定义最大电台数量常量
+- const int MAX_RADIO_STATIONS = 8; 或等价清晰写法
+
+【2】定义 RadioStation 结构体
+字段至少包括：
+- char name[32];
+- char url[192];
+- bool enabled;
+
+【3】定义 AppSettings 结构体
+至少包括：
+- char wifiSsid[32];
+- char wifiPass[64];
+- char mqttHost[64];
+- int mqttPort;
+- char mqttUser[32];
+- char mqttPass[64];
+- char aiApi[128];
+- char aiKey[128];
+- RadioStation radioStations[MAX_RADIO_STATIONS];
+- int radioStationCount;
+- int brightness;
+- int volume;
+
+【4】声明 settings 模块接口
+- bool settingsBegin();
+- bool settingsLoad();
+- bool settingsSave();
+- AppSettings& settingsGet();
+
+【5】要让接口风格适合 Arduino IDE 和初学者理解
+
+【6】中文注释详细说明：
+- 为什么要有 RadioStation
+- 为什么要有 radioStationCount
+- 为什么用固定长度字符数组而不是复杂容器
+
+【7】不要放实现，只写头文件
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/storage/settings.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+4.请只生成文件：project/src/storage/settings.cpp
+
+已存在文件：
+- project/src/storage/settings.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 使用 Preferences 实现本地配置读写
+- 支持保存多个网络电台源
+
+要求：
+
+【1】使用 Preferences
+
+【2】实现：
+- settingsBegin()
+- settingsLoad()
+- settingsSave()
+- settingsGet()
+
+【3】保存内容至少包括：
+- WiFi SSID
+- WiFi 密码
+- MQTT Host / Port / User / Pass
+- AI API
+- AI Key
+- brightness
+- volume
+- radioStationCount
+- 每个 radioStations[i].name
+- 每个 radioStations[i].url
+- 每个 radioStations[i].enabled
+
+【4】要考虑没有配置时的默认值初始化
+
+【5】中文注释详细说明：
+- key 命名策略
+- 为什么 radioStations 用固定槽位逐项保存
+- load 和 save 的流程
+
+【6】代码风格清晰，适合初学者理解
+
+【7】不要修改 settings.h 的接口风格
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/storage/settings.cpp
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+5.请只生成文件：project/src/sensors/temp_humi.h
+
+传感器型号：
+<在这里填写你的实际型号，例如 AHT20 / SHT30 / DHT22>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义温湿度传感器驱动头文件
+
+要求：
+
+【1】声明清晰接口：
+- bool tempHumiBegin();
+- bool tempHumiRead(float &temperature, float &humidity);
+- bool tempHumiIsConnected();
+
+【2】接口命名直观，适合初学者
+
+【3】使用头文件保护
+
+【4】中文注释说明：
+- begin 做什么
+- read 做什么
+- isConnected 做什么
+
+【5】不要写实现
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/sensors/temp_humi.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+6.请只生成文件：project/src/sensors/temp_humi.cpp
+
+已存在文件：
+- project/config.h
+- project/src/sensors/temp_humi.h
+
+传感器型号：
+<在这里填写你的实际型号，例如 AHT20 / SHT30 / DHT22>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现温湿度传感器驱动
+
+要求：
+
+【1】适配 Arduino IDE
+
+【2】如果依赖第三方库，必须明确写出库名
+
+【3】实现：
+- tempHumiBegin()
+- tempHumiRead(float &temperature, float &humidity)
+- tempHumiIsConnected()
+
+【4】初始化失败和读取失败必须返回 false
+
+【5】中文注释详细说明：
+- 初始化流程
+- 读取流程
+- 失败处理方式
+
+【6】保持最小可运行版本，不做复杂补偿算法
+
+输出要求：
+1. 先说明这个文件作用
+2. 明确依赖库
+3. 输出完整的 project/src/sensors/temp_humi.cpp
+4. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+7.请只生成文件：project/src/sensors/light_sensor.h
+
+传感器型号或类型：
+<填写 BH1750 / 光敏电阻 ADC / 其他>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义光照传感器驱动头文件
+
+要求：
+
+【1】声明接口：
+- bool lightSensorBegin();
+- float lightSensorRead();
+
+【2】如果是模拟量方案，再声明：
+- int lightSensorReadRaw();
+
+【3】使用头文件保护
+
+【4】中文注释说明各接口用途
+
+【5】不要写实现
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/sensors/light_sensor.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+8.请只生成文件：project/src/sensors/light_sensor.cpp
+
+已存在文件：
+- project/config.h
+- project/src/sensors/light_sensor.h
+
+传感器型号或类型：
+<填写 BH1750 / 光敏电阻 ADC / 其他>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现光照传感器驱动
+
+要求：
+
+【1】适配 Arduino IDE
+
+【2】如果依赖第三方库，必须明确写出库名
+
+【3】使用 config.h 中光照相关引脚或总线配置
+
+【4】实现：
+- lightSensorBegin()
+- lightSensorRead()
+- 如适用，再实现 lightSensorReadRaw()
+
+【5】中文注释详细说明：
+- 初始化逻辑
+- 原始值和处理值的区别
+- 为什么这样设计
+
+【6】保持最小可运行版本
+
+输出要求：
+1. 先说明这个文件作用
+2. 明确依赖库
+3. 输出完整的 project/src/sensors/light_sensor.cpp
+4. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+9.请只生成文件：project/src/sensors/radar_sensor.h
+
+雷达类型：
+<填写 GPIO 高低电平输出型 / 串口毫米波型>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义人体雷达驱动头文件
+
+要求：
+
+【1】如果是 GPIO 型，声明：
+- bool radarBegin();
+- bool radarRead();
+
+【2】如果是串口型，声明：
+- bool radarBegin(HardwareSerial &serialPort);
+- bool radarUpdate();
+- bool radarReadPresence();
+
+【3】头文件保护
+
+【4】中文注释说明为什么不同类型接口不同
+
+【5】不要写实现
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/sensors/radar_sensor.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+10.请只生成文件：project/src/sensors/radar_sensor.cpp
+
+已存在文件：
+- project/config.h
+- project/src/sensors/radar_sensor.h
+
+雷达类型：
+<填写 GPIO 高低电平输出型 / 串口毫米波型>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现人体雷达驱动
+
+要求：
+
+【1】根据雷达类型实现对应逻辑
+
+【2】GPIO 型：
+- 使用 config.h 中雷达引脚
+- radarRead() 返回是否检测到人
+
+【3】串口型：
+- 给出最小可运行骨架
+- 协议不完整时允许用占位解析结构，但要明确注释
+
+【4】中文注释详细说明：
+- GPIO 型为什么简单
+- 串口型为什么要 update / read 分离
+
+【5】保持最小可运行版本
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/sensors/radar_sensor.cpp
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+11.请只生成文件：project/src/sensors/microphone.h
+
+麦克风类型：
+<填写 ADC 模拟麦克风 / I2S 麦克风>
+
+当前目标：
+- 只做环境声音强度检测，不做语音识别
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义麦克风声音强度采集头文件
+
+要求：
+
+【1】声明：
+- bool microphoneBegin();
+- int microphoneReadRaw();
+- int microphoneReadLevel();
+
+【2】头文件保护
+
+【3】中文注释说明 raw 和 level 的区别
+
+【4】不要写实现
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/sensors/microphone.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+12.请只生成文件：project/src/sensors/microphone.cpp
+
+已存在文件：
+- project/config.h
+- project/src/sensors/microphone.h
+
+麦克风类型：
+<填写 ADC 模拟麦克风 / I2S 麦克风>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现环境声音强度检测
+
+要求：
+
+【1】microphoneReadRaw() 返回原始值
+
+【2】microphoneReadLevel() 返回适合显示和逻辑判断的强度值
+
+【3】可以加入简单平均、平滑或包络处理，但不要复杂
+
+【4】中文注释详细说明：
+- raw 值是什么
+- level 值为什么更适合 UI / 阈值判断
+
+【5】保持最小可运行版本
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/sensors/microphone.cpp
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+
+13.请只生成文件：project/src/audio/speaker.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义简单提示音与 About 页面短旋律模块头文件
+
+要求：
+
+【1】声明：
+- bool speakerBegin();
+- void speakerBeep(int durationMs);
+- void speakerOn();
+- void speakerOff();
+- void speakerPlayAboutMelody();
+- void speakerMelodyLoop();
+- bool speakerMelodyIsPlaying();
+
+【2】中文注释说明：
+- 哪些用于短 beep
+- 哪些用于 About 页面旋律
+
+【3】头文件保护
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/audio/speaker.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+
+14.请只生成文件：project/src/audio/speaker.cpp
+
+已存在文件：
+- project/config.h
+- project/src/audio/speaker.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现短 beep 与 About 页面短旋律
+
+要求：
+
+【1】实现：
+- speakerBegin()
+- speakerBeep(int durationMs)
+- speakerOn()
+- speakerOff()
+
+【2】实现 About 页面短旋律：
+- speakerPlayAboutMelody()
+- speakerMelodyLoop()
+- speakerMelodyIsPlaying()
+
+【3】About 页面短旋律要求：
+- 风格参考经典 Windows 时代 MIDI 音乐氛围
+- 不解析真实 MIDI
+- 用音符数组表示
+- 非阻塞
+- 长度控制在约 2~5 秒
+- 进入 AboutPage 时只播放一次，不循环
+
+【4】中文注释详细说明：
+- 为什么不用真实 MIDI 解析
+- 为什么旋律必须非阻塞
+- 为什么旋律只播一次
+
+【5】保留现有短 beep 功能
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/audio/speaker.cpp
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+15.请只生成文件：project/src/audio/audio_player.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义音频播放器头文件
+
+功能：
+- 播放网络电台 URL
+- 播放 AI TTS URL
+- 播放 click.wav
+- 停止持续性播放
+
+要求：
+
+【1】声明：
+- bool audioPlayerBegin();
+- bool audioPlayerPlayUrl(const String &url);
+- void audioPlayerStop();
+- bool audioPlayerIsPlaying();
+- void audioPlayerLoop();
+- void audioPlayerPlayClick();
+
+【2】如果有必要，可增加内部上下文查询接口，但不要复杂
+
+【3】中文注释说明：
+- click.wav 只由 ui_manager 触发
+- RadioPage / AiPage 的持续性音频要能被 stop 立即中断
+
+【4】头文件保护
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/audio/audio_player.h
+3. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+16.请只生成文件：project/src/audio/audio_player.cpp
+
+已存在文件：
+- project/config.h
+- project/src/audio/audio_player.h
+
+音频输出方案：
+<填写 I2S 功放 / 其他>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现网络电台、TTS URL、click.wav 播放与停止
+
+要求：
+
+【1】如需第三方库，必须明确列出库名
+
+【2】实现：
+- audioPlayerBegin()
+- audioPlayerPlayUrl(const String &url)
+- audioPlayerStop()
+- audioPlayerIsPlaying()
+- audioPlayerLoop()
+- audioPlayerPlayClick()
+
+【3】必须保证：
+- audioPlayerStop() 能立即停止当前电台或 TTS 播放
+- click.wav 是短 UI 音效，不受页面退出停播规则影响
+- 离开 RadioPage 时 stop 能终止电台
+- 离开 AiPage 时 stop 能终止 TTS
+
+【4】可用内部状态区分：
+- 当前播放是 RADIO
+- 当前播放是 AI_TTS
+- 当前播放是 UI_SFX
+- 或者更简单但必须可维护
+
+【5】中文注释详细说明：
+- 为什么 click.wav 不属于页面上下文持续音频
+- 为什么 stop 必须可靠
+
+输出要求：
+1. 先说明这个文件作用
+2. 列出依赖库
+3. 输出完整的 project/src/audio/audio_player.cpp
+4. 最后补充：
+   - 依赖哪些文件
+   - 下一步建议生成哪个文件
+   - 当前容易踩的坑
+
+
+
+17.请只生成文件：project/src/ui/display_driver.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义 TFT_eSPI + LVGL 底层显示驱动头文件
+
+要求：
+1. 声明：
+   - bool displayDriverBegin();
+   - void displayDriverLoop();
+2. 中文注释说明职责
+3. 头文件保护
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/display_driver.h
+3. 最后补充依赖、下一步建议、易踩坑
+
+
+18.请只生成文件：project/src/ui/display_driver.cpp
+
+已存在文件：
+- project/config.h
+- project/src/ui/display_driver.h
+
+屏幕信息：
+- TFT 型号：<填写>
+- 分辨率：<填写>
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 初始化 TFT_eSPI + LVGL
+
+要求：
+
+【1】实现：
+- lv_init()
+- draw buffer
+- flush callback
+- displayDriverBegin()
+- displayDriverLoop()
+
+【2】displayDriverLoop() 中必须调用 lv_timer_handler()
+
+【3】中文注释详细说明：
+- draw buffer 的作用
+- flush callback 的作用
+- 为什么 loop 中要持续刷新
+
+【4】明确依赖库
+
+输出要求：
+1. 先说明作用
+2. 列出依赖库
+3. 输出完整的 project/src/ui/display_driver.cpp
+4. 最后补充依赖、下一步建议、易踩坑
+
+19.请只生成文件：project/src/ui/ui_theme_pocketpc.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义 Pocket PC 2000 风格主题头文件
+
+要求：
+
+【1】声明：
+- void uiThemePocketPcInit();
+
+【2】声明适合全局复用的样式对象或样式结构，至少包含：
+- pageBackground
+- titleBar
+- statusText
+- buttonNormal
+- buttonPressed
+- listItemNormal
+- listItemSelected
+
+【3】中文注释说明各样式用途
+
+【4】头文件保护
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_theme_pocketpc.h
+3. 最后补充依赖、下一步建议、易踩坑
+
+
+20.请只生成文件：project/src/ui/ui_theme_pocketpc.cpp
+
+已存在文件：
+- project/src/ui/ui_theme_pocketpc.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现 Pocket PC 2000 风格主题
+
+要求：
+
+【1】风格特征必须实现：
+- 整体灰底
+- 深蓝标题栏
+- 黑边框
+- 白色标题文字
+- 列表选中项深蓝底白字
+- 按钮普通状态有轻微凸起感
+- 按钮按下状态有“凹下去”感觉
+- 状态栏文本清晰紧凑
+
+【2】实现 uiThemePocketPcInit()
+
+【3】中文注释详细说明：
+- buttonPressed 为什么会有凹陷感
+- listItemSelected 为什么统一深蓝底白字
+- 状态栏样式为什么单独定义
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_theme_pocketpc.cpp
+3. 最后补充依赖、下一步建议、易踩坑
+
+
+
+
+21.请只生成文件：project/src/ui/ui_frame.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义统一页面框架头文件
+
+页面统一结构：
+- 顶栏左：返回
+- 顶栏中：标题
+- 顶栏右：菜单
+- 顶栏状态栏文本：显示 WiFi/MQTT/AI/Audio 状态
+- 下方内容区
+
+要求：
+
+【1】定义 UiFrame 结构体，至少包含：
+- lv_obj_t *root
+- lv_obj_t *backBtn
+- lv_obj_t *titleLabel
+- lv_obj_t *menuBtn
+- lv_obj_t *statusLabel
+- lv_obj_t *content
+
+【2】声明：
+- UiFrame uiFrameCreate(const char *title);
+
+【3】中文注释说明每个字段的职责
+
+【4】头文件保护
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_frame.h
+3. 最后补充依赖、下一步建议、易踩坑
+
+
+22.请只生成文件：project/src/ui/ui_frame.cpp
+
+已存在文件：
+- project/src/ui/ui_frame.h
+- project/src/ui/ui_theme_pocketpc.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现统一页面框架
+
+要求：
+
+【1】创建：
+- root 页面对象
+- 顶栏容器
+- 返回按钮
+- 标题标签
+- 菜单按钮
+- 状态栏文本
+- 内容区容器
+
+【2】顶栏按钮使用 Pocket PC 风格按钮样式
+- 普通态凸起
+- 按下态凹陷
+
+【3】不在这里绑定业务逻辑
+
+【4】中文注释详细说明：
+- 为什么 frame 统一创建顶栏
+- 为什么状态栏不应该由各页面自己造
+- 为什么内容区单独分离
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_frame.cpp
+3. 最后补充依赖、下一步建议、易踩坑
+
+23.请只生成文件：project/src/ui/ui_keypad.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义五向摇杆输入头文件
+
+要求：
+
+【1】定义统一按键常量或枚举：
+- UI_KEY_NONE
+- UI_KEY_UP
+- UI_KEY_DOWN
+- UI_KEY_LEFT
+- UI_KEY_RIGHT
+- UI_KEY_OK
+
+【2】声明：
+- bool uiKeypadBegin();
+- bool uiKeypadRead(uint32_t &key);
+
+【3】头文件保护
+【4】中文注释
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_keypad.h
+3. 最后补充依赖、下一步建议、易踩坑
+
+24.请只生成文件：project/src/ui/ui_keypad.cpp
+
+已存在文件：
+- project/config.h
+- project/src/ui/ui_keypad.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现五向摇杆输入读取
+
+要求：
+
+【1】使用 config.h 中摇杆引脚
+
+【2】实现：
+- uiKeypadBegin()
+- uiKeypadRead(uint32_t &key)
+
+【3】加基础去抖
+
+【4】中文注释说明：
+- 每个方向的映射
+- 为什么需要去抖
+- 为什么只返回一个统一键值
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_keypad.cpp
+3. 最后补充依赖、下一步建议、易踩坑
+
+
+25.请只生成文件：project/src/ui/ui_manager.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 定义 UI 管理器头文件
+
+要求：
+
+【1】定义页面枚举，完整包含：
+- HOME_PAGE
+- MENU_PAGE
+- SENSOR_PAGE
+- SETTINGS_MENU_PAGE
+- WIFI_INFO_PAGE
+- BLUETOOTH_INFO_PAGE
+- MQTT_INFO_PAGE
+- BRIGHTNESS_PAGE
+- VOLUME_PAGE
+- RADIO_PAGE
+- AI_PAGE
+- ABOUT_PAGE
+- DINO_PAGE
+- PLACEHOLDER_PAGE
+
+【2】声明：
+- void uiManagerBegin();
+- void uiManagerUpdate(const SensorData &data, const SystemState &state);
+- void uiManagerHandleKey(uint32_t key);
+- void uiManagerGoTo(int pageId);
+- void uiManagerGoBack();
+
+【3】中文注释说明职责
+
+【4】头文件保护
+
+输出要求：
+1. 先说明作用
+2. 输出完整的 project/src/ui/ui_manager.h
+3. 最后补充依赖、下一步建议、易踩坑
+
+26.请只生成文件：project/src/ui/ui_manager.cpp
+
+已存在文件：
+- project/app_data.h
+- project/src/ui/ui_manager.h
+- project/src/audio/audio_player.h
+- project/src/audio/speaker.h
+- project/src/ui/ui_home_page.h
+- project/src/ui/ui_menu_page.h
+- project/src/ui/ui_sensor_page.h
+- project/src/ui/ui_settings_menu_page.h
+- project/src/ui/ui_wifi_info_page.h
+- project/src/ui/ui_bluetooth_info_page.h
+- project/src/ui/ui_mqtt_info_page.h
+- project/src/ui/ui_brightness_page.h
+- project/src/ui/ui_volume_page.h
+- project/src/ui/ui_radio_page.h
+- project/src/ui/ui_ai_page.h
+- project/src/ui/ui_about_page.h
+- project/src/ui/ui_dino_page.h
+
+你不能生成任何别的文件，也不能修改任何别的文件。
+
+目标：
+- 实现整个 UI 的导航与调度核心
+
+要求：
+
+【1】页面切换逻辑统一在这里实现
+- 页面自身不负责全局导航
+- 页面自身不负责 click.wav
+- 页面自身不负责退出停播
+
+【2】实现页面树：
+- HomePage
+- MenuPage
+  - SensorPage
+  - SettingsMenuPage
+    - WiFiInfoPage
+    - BluetoothInfoPage
+    - MqttInfoPage
+    - BrightnessPage
+    - VolumePage
+  - RadioPage
+  - AiPage
+  - DinoPage
+  - AboutPage
+
+【3】输入规则：
+- HomePage 右键进入 MenuPage
+- MenuPage / SettingsMenuPage 上下切换选中项
+- OK 进入选中项
+- LEFT 返回上一页
+- 右上菜单键回主菜单（可通过统一逻辑预留）
+
+【4】状态栏刷新规则：
+- 在 uiManagerUpdate(...) 中统一刷新当前页面 frame 的状态栏
+- 状态栏至少显示：
+  - WiFi
+  - MQTT
+  - AI
+  - Audio
+- 不要让每个页面自己更新状态栏
+
+【5】click.wav 规则，必须严格实现：
+- 只有“点击进入下级菜单”的时候调用 audioPlayerPlayClick()
+- 上下移动选中项时不调用
+- 返回上一页时不调用
+- 左右调节数值时不调用
+- 页面自身不决定 click.wav
+
+【6】页面退出停播规则，必须严格实现：
+- 如果 from == RADIO_PAGE 且 to != RADIO_PAGE，则调用 audioPlayerStop()
+- 如果 from == AI_PAGE 且 to != AI_PAGE，则调用 audioPlayerStop()
+- 离开 AboutPage 不需要停旋律，因为旋律只播一次且不循环
+
+【7】AboutPage 特殊规则：
+- 进入 AboutPage 时调用 speakerPlayAboutMelody()
+- 只在进入瞬间调用一次
+- 不循环触发
+- AboutPage 自己不负责播放旋律
+
+【8】保持代码结构清晰：
+- 可用当前页面 ID
+- 可用返回栈或简单上级页面记录
+- 但不要过度复杂
+
+【9】中文注释必须详细说明：
+- 页面切换逻辑
+- click.wav 触发时机
+- RadioPage / AiPage 退出停播原因
+- AboutPage 旋律为什么由 ui_manager 触发
+
+输出要求：
+1. 先说明这个文件作用
+2. 输出完整的 project/src/ui/ui_manager.cpp
+3. 最后补充依赖、下一步建议、易踩坑
+
+
+27.请只生成文件：project/src/ui/ui_home_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiHomePageCreate();
+   - void uiHomePageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_home_page.h。
+
+28.请只生成文件：project/src/ui/ui_home_page.cpp
+
+已存在文件：
+- project/app_data.h
+- project/src/ui/ui_home_page.h
+- project/src/ui/ui_frame.h
+
+目标：
+- 创建首页页面
+
+内容：
+- 大号时间
+- 小号农历
+- 温湿度概览
+
+要求：
+1. 使用 ui_frame
+2. create 只创建对象
+3. update 只刷新文本
+4. 不负责导航
+5. 不负责 click.wav
+6. 中文注释
+
+请输出完整的 project/src/ui/ui_home_page.cpp。
+
+29.请只生成文件：project/src/ui/ui_menu_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiMenuPageCreate();
+   - void uiMenuPageSetSelected(uint8_t index);
+   - uint8_t uiMenuPageGetSelected();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_menu_page.h。
+
+30.请只生成文件：project/src/ui/ui_menu_page.cpp
+
+已存在文件：
+- project/src/ui/ui_menu_page.h
+- project/src/ui/ui_frame.h
+- project/src/ui/ui_theme_pocketpc.h
+
+目标：
+- 创建主菜单页面
+
+菜单项：
+- 传感器
+- 设置
+- 网络电台
+- 人工智能助手
+- 小恐龙游戏
+- 关于本机
+
+要求：
+1. 当前选中项必须深蓝底白字
+2. 未选中项浅灰底黑字
+3. 上下移动选中项时只改变选中高亮，不播放 click.wav
+4. OK 进入页面时的 click.wav 由 ui_manager 统一负责
+5. 菜单项如使用按钮对象，要有普通态和按下态样式
+6. 中文注释说明：
+   - 选中态与进入态的区别
+   - 为什么页面自身不触发 click.wav
+
+请输出完整的 project/src/ui/ui_menu_page.cpp。
+
+31.请只生成文件：project/src/ui/ui_sensor_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiSensorPageCreate();
+   - void uiSensorPageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_sensor_page.h。
+
+32.请只生成文件：project/src/ui/ui_sensor_page.cpp
+
+已存在文件：
+- project/app_data.h
+- project/src/ui/ui_sensor_page.h
+- project/src/ui/ui_frame.h
+
+目标：
+- 创建传感器总览页
+
+显示：
+- 温湿度
+- 光照
+- 人体状态
+- RGB 联动状态色块
+
+要求：
+1. 使用 ui_frame
+2. 只负责显示，不直接控制真实 RGB
+3. update 中刷新数据和色块状态
+4. 中文注释
+
+请输出完整的 project/src/ui/ui_sensor_page.cpp。
+
+32.请只生成文件：project/src/ui/ui_settings_menu_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiSettingsMenuPageCreate();
+   - void uiSettingsMenuPageSetSelected(uint8_t index);
+   - uint8_t uiSettingsMenuPageGetSelected();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_settings_menu_page.h。
+
+33.请只生成文件：project/src/ui/ui_settings_menu_page.cpp
+
+已存在文件：
+- project/src/ui/ui_settings_menu_page.h
+- project/src/ui/ui_frame.h
+- project/src/ui/ui_theme_pocketpc.h
+
+目标：
+- 创建设置菜单页
+
+菜单项：
+- WiFi 信息
+- 蓝牙信息
+- MQTT 信息
+- 屏幕亮度
+- 音量设置
+
+要求：
+1. 当前选中项高亮蓝
+2. 上下移动选中项时不播放 click.wav
+3. 进入下级页面时的 click.wav 由 ui_manager 控制
+4. 中文注释
+
+请输出完整的 project/src/ui/ui_settings_menu_page.cpp。
+
+
+34.请只生成文件：project/src/ui/ui_wifi_info_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiWifiInfoPageCreate();
+   - void uiWifiInfoPageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_wifi_info_page.h。
+
+35.请只生成文件：project/src/ui/ui_wifi_info_page.cpp
+
+目标：
+- 创建 WiFi 信息页
+
+显示：
+- WiFi 状态
+- IP 地址
+- 子网掩码
+- MAC 地址
+
+要求：
+1. 使用 ui_frame
+2. 当前网络信息可先占位，后续可接真实值
+3. 页面自身不负责 click.wav
+4. 中文注释
+
+请输出完整的 project/src/ui/ui_wifi_info_page.cpp。
+
+36.请只生成文件：project/src/ui/ui_bluetooth_info_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiBluetoothInfoPageCreate();
+   - void uiBluetoothInfoPageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_bluetooth_info_page.h。
+
+
+37.请只生成文件：project/src/ui/ui_bluetooth_info_page.cpp
+
+目标：
+- 创建蓝牙信息页
+
+显示：
+- 蓝牙状态
+- 蓝牙 MAC 地址
+
+要求：
+1. 使用 ui_frame
+2. 蓝牙当前未实现时允许占位
+3. 页面自身不负责 click.wav
+4. 中文注释
+
+请输出完整的 project/src/ui/ui_bluetooth_info_page.cpp。
+
+
+38.请只生成文件：project/src/ui/ui_mqtt_info_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiMqttInfoPageCreate();
+   - void uiMqttInfoPageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_mqtt_info_page.h。
+
+
+37.请只生成文件：project/src/ui/ui_mqtt_info_page.cpp
+
+目标：
+- 创建 MQTT 信息页
+
+显示：
+- MQTT 连接状态
+- Broker 地址
+- Home Assistant 相关提示信息
+
+要求：
+1. 使用 ui_frame
+2. 页面自身不负责 click.wav
+3. update 中可根据 state 刷新连接状态
+4. 中文注释
+
+请输出完整的 project/src/ui/ui_mqtt_info_page.cpp。
+
+39.请只生成文件：project/src/ui/ui_brightness_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiBrightnessPageCreate();
+   - void uiBrightnessPageUpdate(int brightnessValue);
+   - void uiBrightnessPageAdjust(int delta);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_brightness_page.h。
+
+40.请只生成文件：project/src/ui/ui_brightness_page.cpp
+
+目标：
+- 创建亮度调节页
+
+显示：
+- 当前亮度值
+- 进度条
+
+规则：
+- 左右调节时不播放 click.wav
+
+要求：
+1. 使用 ui_frame
+2. adjust 修改当前值
+3. update 刷新 UI
+4. 页面自身不决定音效
+5. 中文注释
+
+请输出完整的 project/src/ui/ui_brightness_page.cpp。
+
+41.请只生成文件：project/src/ui/ui_volume_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiVolumePageCreate();
+   - void uiVolumePageUpdate(int volumeValue);
+   - void uiVolumePageAdjust(int delta);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_volume_page.h。
+
+
+42.请只生成文件：project/src/ui/ui_volume_page.cpp
+
+目标：
+- 创建音量调节页
+
+显示：
+- 当前音量值
+- 进度条
+
+规则：
+- 左右调节时不播放 click.wav
+
+要求：
+1. 使用 ui_frame
+2. adjust 修改当前值
+3. update 刷新 UI
+4. 页面自身不决定音效
+5. 中文注释
+
+请输出完整的 project/src/ui/ui_volume_page.cpp。
+
+
+43.请只生成文件：project/src/ui/ui_radio_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiRadioPageCreate();
+   - void uiRadioPageUpdate();
+   - void uiRadioPageSetSelected(uint8_t index);
+   - uint8_t uiRadioPageGetSelected();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_radio_page.h。
+
+
+44.请只生成文件：project/src/ui/ui_radio_page.cpp
+
+已存在文件：
+- project/src/ui/ui_radio_page.h
+- project/src/ui/ui_frame.h
+- project/src/storage/settings.h
+
+目标：
+- 创建网络电台页
+- 支持多电台源
+
+要求：
+1. 从 settings 读取电台列表
+2. 显示多个电台名称
+3. 当前选中项高亮蓝
+4. 上下移动选中项时不播放 click.wav
+5. OK 只负责选定当前电台并由上层触发播放
+6. 页面自身不负责退出停播
+7. 页面自身不负责 click.wav
+8. 中文注释说明：
+   - 列表来源
+   - 选中项与当前播放状态的区别
+
+请输出完整的 project/src/ui/ui_radio_page.cpp。
+
+45.请只生成文件：project/src/ui/ui_ai_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiAiPageCreate();
+   - void uiAiPageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_ai_page.h。
+
+
+46.请只生成文件：project/src/ui/ui_ai_page.cpp
+
+目标：
+- 创建 AI 页面
+
+显示：
+- AI 状态（待机 / 请求中 / 播报中）
+- 最后一条回复摘要
+- 操作提示
+
+要求：
+1. 使用 ui_frame
+2. 页面自身不直接发起 AI 请求
+3. 页面自身不负责退出停播
+4. 页面自身不负责 click.wav
+5. 中文注释
+
+请输出完整的 project/src/ui/ui_ai_page.cpp。
+
+
+46.请只生成文件：project/src/ui/ui_about_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiAboutPageCreate();
+   - void uiAboutPageUpdate(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_about_page.h。
+
+
+47.请只生成文件：project/src/ui/ui_about_page.cpp
+
+目标：
+- 创建关于本机页
+
+显示：
+- 设备名称
+- 项目名称
+- 固件版本
+- 作者
+- 芯片型号
+- 编译日期/时间
+
+要求：
+1. 使用 ui_frame
+2. 页面自身不触发旋律，由 ui_manager 控制
+3. 页面自身不负责 click.wav
+4. 中文注释
+
+请输出完整的 project/src/ui/ui_about_page.cpp。
+
+
+48.请只生成文件：project/src/ui/ui_dino_page.h
+
+要求：
+1. 声明：
+   - lv_obj_t* uiDinoPageCreate();
+   - void uiDinoPageUpdate();
+   - void uiDinoPageJump();
+   - void uiDinoPageReset();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ui/ui_dino_page.h。
+
+49.请只生成文件：project/src/ui/ui_dino_page.cpp
+
+目标：
+- 创建简化版 Dino 页面
+
+内容：
+- 地面
+- 恐龙
+- 一个仙人掌
+- 分数
+- Game Over 提示
+
+要求：
+1. 使用 ui_frame
+2. 简单状态变量实现
+3. 进入页面时 click.wav 由 ui_manager 触发
+4. 游戏内部动作不使用 click.wav
+5. 中文注释
+
+请输出完整的 project/src/ui/ui_dino_page.cpp。
+
+50.请只生成文件：project/src/net/wifi_manager.h
+
+要求：
+1. 声明：
+   - bool wifiManagerBegin();
+   - bool wifiManagerConnect();
+   - bool wifiManagerIsConnected();
+   - String wifiManagerGetIp();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/net/wifi_manager.h。
+
+
+51.请只生成文件：project/src/net/wifi_manager.cpp
+
+已存在文件：
+- project/src/net/wifi_manager.h
+- project/src/storage/settings.h
+
+目标：
+- 读取 settings 中的 WiFi 配置并连接
+
+要求：
+1. 使用 Arduino WiFi 标准库
+2. 实现：
+   - wifiManagerBegin()
+   - wifiManagerConnect()
+   - wifiManagerIsConnected()
+   - wifiManagerGetIp()
+3. 中文注释
+4. 保持最小可运行版本
+
+请输出完整的 project/src/net/wifi_manager.cpp。
+
+
+52.请只生成文件：project/src/net/web_server.h
+
+要求：
+1. 声明：
+   - bool webServerBegin();
+   - void webServerLoop();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/net/web_server.h。
+
+52.请只生成文件：project/src/net/web_server.cpp
+
+已存在文件：
+- project/src/net/web_server.h
+- project/src/storage/settings.h
+- project/app_data.h
+
+目标：
+- 实现 Web UI，包括状态页、基础配置页、网络电台源管理
+
+页面至少包括：
+
+【1】状态页
+显示：
+- 温度
+- 湿度
+- 光照
+- 人体状态
+- 声音强度
+- WiFi 状态
+- MQTT 状态
+- AI 状态
+
+【2】基础配置页
+支持：
+- WiFi 设置
+- MQTT 设置
+- 电台 URL / AI API 相关设置
+
+【3】电台管理页
+支持：
+- 查看电台列表
+- 添加电台（name + url）
+- 删除电台
+
+要求：
+1. 使用简单 HTML 字符串拼接
+2. 不使用前端框架
+3. 使用 settings 读写配置
+4. 中文注释详细说明路由逻辑
+5. 保持 Arduino IDE 可运行
+
+请输出完整的 project/src/net/web_server.cpp。
+
+53.请只生成文件：project/src/mqtt/mqtt_client.h
+
+要求：
+1. 声明：
+   - bool mqttClientBegin();
+   - bool mqttClientConnect();
+   - bool mqttClientIsConnected();
+   - void mqttClientLoop();
+   - bool mqttClientPublishTelemetry(const SensorData &data, const SystemState &state);
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/mqtt/mqtt_client.h。
+
+54.请只生成文件：project/src/ai/ai_client.h
+
+要求：
+1. 声明：
+   - bool aiBegin();
+   - bool aiAsk(const String &text);
+   - bool aiIsBusy();
+   - String aiGetLastReply();
+2. 中文注释
+3. 头文件保护
+
+请输出完整的 project/src/ai/ai_client.h。
+
+55.请只生成文件：project/src/ai/ai_client.cpp
+
+已存在文件：
+- project/src/ai/ai_client.h
+- project/src/storage/settings.h
+- project/src/audio/audio_player.h
+
+目标：
+- 通过 HTTP 请求外部 AI 服务
+- 保存最后回复
+- 如果返回 audio_url，则交给 audio_player 播放
+
+要求：
+1. 从 settings 读取 AI API 地址和 Key
+2. 实现：
+   - aiBegin()
+   - aiAsk(const String &text)
+   - aiIsBusy()
+   - aiGetLastReply()
+3. 失败不能拖垮主循环
+4. 中文注释
+5. 保持最小可运行版本
+
+请输出完整的 project/src/ai/ai_client.cpp。
+
+56.请只修改文件：project/project.ino
+
+当前整个项目所有模块都已生成。
+
+目标：
+- 整理成最终总集成版
+- 保证主循环清晰
+- 不使用 FreeRTOS
+
+要求：
+1. setup() 中初始化：
+   - Serial
+   - settings
+   - displayDriver
+   - uiThemePocketPc
+   - uiKeypad
+   - uiManager
+   - 各传感器
+   - speaker
+   - audioPlayer
+   - wifiManager
+   - webServer
+   - mqttClient
+   - aiClient
+2. loop() 中分时处理：
+   - 传感器采样
+   - processLogic()
+   - uiKeypadRead() -> uiManagerHandleKey()
+   - uiManagerUpdate(...)
+   - displayDriverLoop()
+   - webServerLoop()
+   - mqttClientLoop()
+   - audioPlayerLoop()
+   - speakerMelodyLoop()
+3. 使用 millis() 调度
+4. 维护完整 SystemState
+5. 中文注释
+6. 严格保持：
+   - click.wav 只在进入子页面时触发
+   - RadioPage / AiPage 离开时立即停播
+   - AboutPage 只播一次旋律
+
+请输出最终完整的 project/project.ino。
